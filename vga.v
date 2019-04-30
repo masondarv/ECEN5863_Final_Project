@@ -12,7 +12,7 @@
 module vga(
 	input clk, reset,
 	input r, g, b,
-	output [9:0] hscan, vscan,
+	output [9:0] hcount, vcount,
 	output hsync, vsync,
 	output r, g, b);
 
