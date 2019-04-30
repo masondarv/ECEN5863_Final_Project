@@ -1,3 +1,6 @@
+// Doty Darveaux
+// ECEN 5863
+// Pong Final Project
 
 module paddle(
 input clk, rst,
