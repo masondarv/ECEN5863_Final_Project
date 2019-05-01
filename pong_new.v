@@ -1,9 +1,10 @@
 
 
 
-module test(
+module pong_new(
 				input CLOCK_50,
 				input [3:0] KEY,
+				inout [35:0] GPIO_0,
 				output VGA_HS, VGA_VS, VGA_CLK,
 				output [7:0] VGA_R, VGA_G, VGA_B
 				);
@@ -18,27 +19,41 @@ module test(
 	vga_pll pixel_clk (
 		.refclk (CLOCK_50),		//  refclk.clk
 		.rst (reset),				//   reset.reset
-		.outclk_0 (clk) );		// outclk0.clk
+		.outclk_0 (clk) );		// outclk0.clk 
 				
 	vga vga_inst (
 		.clk (clk),
 		.reset (reset),
-		.iR (myR),
-		.iG (myG),
-		.iB (myB),
+//		.iR (1),
+//		.iG (0),
+//		.iB (1),
+		.blank (VGA_BLANK_N),
+		.sync (VGA_SYNC_N),
 		.hcount (hcount),
 		.vcount (vcount),
 		.hsync (VGA_HS),
 		.vsync (VGA_VS),
-		.oR (VGA_R),
-		.oG (VGA_G),
-		.oB (VGA_B)
+//		.oR (VGA_R),
+//		.oG (VGA_G),
+//		.oB (VGA_B)
 	);
 	
-	assign VGA_CLK = CLOCK_50;
+	assign VGA_CLK = clk;
+	
+	assign GPIO_0[0] = VGA_BLANK_N;
+	assign VGA_R = 8'hFF;
+	assign VGA_G = 0;
+	assign VGA_B = 0;
 
-	assign myR = &(hcount & 10'hF0);
-	assign myG = !(&(hcount & 10'hF0));
-	assign myB = !(myR || myG);
+	
+	frame frame_inst(
+		.clk (clk),
+		.reset (reset),
+		.hcount (hcount),
+		.vcount (vcount),
+		.r (myR),
+		.g (myG),
+		.b (myB)
+	);
 	
 endmodule
