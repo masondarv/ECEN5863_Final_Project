@@ -24,26 +24,21 @@ module pong_new(
 	vga vga_inst (
 		.clk (clk),
 		.reset (reset),
-//		.iR (1),
-//		.iG (0),
-//		.iB (1),
+		.iR (myR),
+		.iG (myG),
+		.iB (myB),
 		.blank (VGA_BLANK_N),
 		.sync (VGA_SYNC_N),
 		.hcount (hcount),
 		.vcount (vcount),
 		.hsync (VGA_HS),
 		.vsync (VGA_VS),
-//		.oR (VGA_R),
-//		.oG (VGA_G),
-//		.oB (VGA_B)
+		.oR (VGA_R),
+		.oG (VGA_G),
+		.oB (VGA_B)
 	);
 	
 	assign VGA_CLK = clk;
-	
-	assign GPIO_0[0] = VGA_BLANK_N;
-	assign VGA_R = 8'hFF;
-	assign VGA_G = 0;
-	assign VGA_B = 0;
 
 	
 	frame frame_inst(
