@@ -60,46 +60,36 @@ end
 
 always @(negedge vsync)
 begin
+    //button is active low
 
-	 //reset paddle position
-	 if(rst ==1'b1) begin
-	 paddleStartPos <= 9'd216;
-	 end
+    if(up== 1'b0) begin
+        if(paddleStartPos == 0) begin
+            paddleStartPos <=0;
 
-	 else begin
+        end
 
-			//button is active low
+        else begin
+            paddleStartPos <= paddleStartPos -1;
+        end
 
-			 if(up== 1'b0) begin
-				  if(paddleStartPos <= 3) begin
-						paddleStartPos <=3;
+    end
 
-				  end
+    else if (down ==1'b0) begin
+        if(paddleStartPos >= 432) begin
+            paddleStartPos <=432;
 
-				  else begin
-						paddleStartPos <= paddleStartPos -1;
-				  end
+        end
 
-			 end
+        else begin
+            paddleStartPos <= paddleStartPos +1;
+        end
 
-			 else if (down ==1'b0) begin
-				  if(paddleStartPos >= 429) begin
-						paddleStartPos <=429;
+    end
+    //if neither button is pressed, paddle position remains the same
+    else begin
+        paddleStartPos <= paddleStartPos;
 
-				  end
-
-				  else begin
-						paddleStartPos <= paddleStartPos +1;
-				  end
-
-			 end
-			 //if neither button is pressed, paddle position remains the same
-			 else begin
-				  paddleStartPos <= paddleStartPos;
-
-			 end
-
-		end
+    end
 
 
 end

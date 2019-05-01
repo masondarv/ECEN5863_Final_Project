@@ -40,33 +40,43 @@ module ball(
 	always @(negedge vsync) begin
 		// we're at a frame sync
 		// update the ball location
+
+    // we're colliding, update the vector and do not change ball position
 		if(collision) begin
-			// we're colliding, update the vector
-			if((ball_x == 0)) begin
-			end
-			if((ball_y > 1)) begin
+
+			// if ball is colliding with top or bottom of frame, flip the y vector
+			if(ball_y < 2 || ball_y >478) begin
+				 ball_vect_y <= -ball_vect_y;
 			end
 
-			// hit left or right
-
-			if((ball_x < 5) || (ball_x > 634)) begin
-				// we're hitting the paddle or score wall
-
-				if((ball_x < 2) || (ball_x > 637)) begin
-					// hitting a score wall
-				end
-				else begin
-					// hitting a paddle
-				end
+				// we're hitting a paddle, flip the x vector
+			else if( ((ball_x < 7 ) && (ball_x >2 )) || ((ball_x > 633) && (ball_x<638)) && ((ball_y >=2) && (ball_y <= 478)) ) begin
+				 ball_vect_x <= -ball_vect_x;
 			end
-			// hit left or right paddle
-			// hit top or bottom
+
+				// player 2 scores, stop the ball, add a point for player 2
+			else if(ball_x < 2) begin
+				ball_vect_x <= 0;
+				ball_vect_y <= 0;
+			end
+
+			//player 1 scores, stop the ball, add a point for player 1
+			else if(ball_x > 637) begin
+				ball_vect_x <= 0;
+				ball_vect_y <= 0;
+			end
+
+
 		end
-		// we're not colliding, leave the vector
 
-		// update the location
-		ball_x <= ball_x + ball_vect_x;
-		ball_y <= ball_y + ball_vect_y;
+		// we're not colliding, leave the vector unchanged and update ball location
+		else begin
+			ball_x <= ball_x + ball_vect_x;
+			ball_y <= ball_y + ball_vect_y;
+
+		end
+
+
 	end
 
 
