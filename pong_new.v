@@ -14,11 +14,12 @@ module pong_new(
 				);
 				
 	
-	wire reset, clk;
+	wire hard_reset, reset, clk;
 	wire [9:0] hcount, vcount;
 	wire comb_R, comb_G, comb_B;
 	 
-	assign reset = SW[9];
+	assign hard_reset = SW[9];
+	assign reset = SW[8];
 	
 	assign comb_R = frame_R || pad0_R || pad1_R || ball_R;
 	assign comb_G = frame_G || pad0_G || pad1_G || ball_G;
@@ -28,12 +29,12 @@ module pong_new(
 	
 	vga_pll pixel_clk (
 		.refclk (CLOCK_50),		//  refclk.clk
-		.rst (reset),			//   reset.reset
+		.rst (hard_reset),		//   reset.reset
 		.outclk_0 (clk) );		// outclk0.clk 
 				 
 	vga vga_inst (
 		.clk (clk),
-		.reset (reset),
+		.reset (hard_reset),
 		.iR (comb_R),
 		.iG (comb_G),
 		.iB (comb_B),

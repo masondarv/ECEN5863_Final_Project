@@ -32,8 +32,8 @@ module ball(
 	always @(negedge vsync or posedge reset) begin
 		if(reset) begin
 			// Place the ball in the middle and give it motion
-			ball_x <= 20;		// 640/2
-			ball_y <= 20;		// 480/2
+			ball_x <= 40;		// 640/2
+			ball_y <= 40;		// 480/2
 			ball_vect_x <= 2;	// Start with a 45 degree vector
 			ball_vect_y <= 2;
 		end
