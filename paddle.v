@@ -71,8 +71,8 @@ begin
 			//button is active low
 
 			 if(up== 1'b0) begin
-				  if(paddleStartPos == 0) begin
-						paddleStartPos <=0;
+				  if(paddleStartPos <= 3) begin
+						paddleStartPos <=3;
 
 				  end
 
@@ -83,8 +83,8 @@ begin
 			 end
 
 			 else if (down ==1'b0) begin
-				  if(paddleStartPos >= 432) begin
-						paddleStartPos <=432;
+				  if(paddleStartPos >= 429) begin
+						paddleStartPos <=429;
 
 				  end
 
