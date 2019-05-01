@@ -11,13 +11,15 @@
 //  clock s/b 25.176 MHz
 module vga(
 	input clk, reset,
+	input iR, iG, iB,
+	output wire blank,
 	output reg [9:0] hcount, vcount,
-	output reg hsync, vsync);
+	output reg hsync, vsync,
+	output reg [7:0] oR, oG, oB);
 
 	// Create counters here for hscan and vscan
 	reg [9:0] hcount_raw;
 	reg [9:0] vcount_raw;
-
 
 	always @(posedge clk) begin
 		if(reset) begin
@@ -41,24 +43,35 @@ module vga(
 			if(hcount_raw >= 640) begin
 				hsync <= 0;
 				hcount <= 0;
+				oR <= 0;
+				oG <= 0;
+				oB <= 0;
 			end
 			else begin
 				hsync <= 1'b1;
 				hcount <= hcount_raw;
+				oR <= iR ? 8'hFF : 0;
+				oG <= iG ? 8'hFF : 0;
+				oB <= iB ? 8'hFF : 0;
 			end
 
 			if(vcount_raw >= 480) begin
 				vsync <= 0;
 				vcount <= 0;
+				oR <= 0;
+				oG <= 0;
+				oB <= 0;
 			end
 			else begin
 				vsync <= 1'b1;
 				vcount <= hcount_raw;
+				oR <= iR ? 8'hFF : 0;
+				oG <= iG ? 8'hFF : 0;
+				oB <= iB ? 8'hFF : 0;
 			end
 		end
 	end
 	
-	
-
+	assign blank = ~(~hsync || ~vsync);	// Low whenever vsync or hsync is low
 
 endmodule
