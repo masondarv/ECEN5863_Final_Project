@@ -11,10 +11,8 @@
 //  clock s/b 25.176 MHz
 module vga(
 	input clk, reset,
-	input r, g, b,
-	output [9:0] hcount, vcount,
-	output hsync, vsync,
-	output r, g, b);
+	output reg [9:0] hcount, vcount,
+	output reg hsync, vsync);
 
 	// Create counters here for hscan and vscan
 	reg [9:0] hcount_raw;
@@ -30,12 +28,12 @@ module vga(
 		end
 		else begin
 			// Counters - Raw including sync
-			hcount_raw <= hcount_raw + 1;
+			hcount_raw <= hcount_raw + 1'b1;
 			if(hcount_raw >= 800) begin
 				hcount_raw <= 0;
-				vcount_raw <= vcount_raw + 1;
+				vcount_raw <= vcount_raw + 1'b1;
 				if(vcount_raw >= 525) begin
-					vcount_raw = 0;
+					vcount_raw <= 0;
 				end
 			end
 
@@ -45,7 +43,7 @@ module vga(
 				hcount <= 0;
 			end
 			else begin
-				hsync <= 1;
+				hsync <= 1'b1;
 				hcount <= hcount_raw;
 			end
 
@@ -54,7 +52,7 @@ module vga(
 				vcount <= 0;
 			end
 			else begin
-				vsync <= 1;
+				vsync <= 1'b1;
 				vcount <= hcount_raw;
 			end
 		end

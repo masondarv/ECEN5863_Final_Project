@@ -5,8 +5,9 @@
 module ball(
 	input clk, reset,
 	input [9:0] hcount, vcount,
+	input vsync,
 	input collision,
-	output r, g, b );
+	output reg r, g, b );
 
 	reg [9:0] ball_x, ball_y;
 	reg signed [3:0] ball_vect_x, ball_vect_y;	// Stores the motion vector for the ball (current location is incremented by this at every frame transition
@@ -21,7 +22,7 @@ module ball(
 		end
 		else begin
 			// output pixels for the ball
-			if((hcount == ball_x) and (vcount == ball_y)) begin
+			if((hcount == ball_x) && (vcount == ball_y)) begin
 				// We're at the ball, output color
 				r <= 1;
 				g <= 1;
@@ -36,20 +37,22 @@ module ball(
 		end
 	end
 
-	always @(negedge vsync)
+	always @(negedge vsync) begin
 		// we're at a frame sync
 		// update the ball location
 		if(collision) begin
 			// we're colliding, update the vector
-			if((ball_x == 0))
-			if((ball_y > ))
+			if((ball_x == 0)) begin
+			end
+			if((ball_y > 1)) begin
+			end
 
 			// hit left or right
 
-			if((ball_x < 5) or (ball_x > 634)) begin
+			if((ball_x < 5) || (ball_x > 634)) begin
 				// we're hitting the paddle or score wall
 
-				if((ball_x < 2) or (ball_x > 637)) begin
+				if((ball_x < 2) || (ball_x > 637)) begin
 					// hitting a score wall
 				end
 				else begin
