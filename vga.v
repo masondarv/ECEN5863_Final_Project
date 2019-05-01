@@ -38,9 +38,9 @@ module vga(
 	assign	sync	=	1'b1;																			// Not used
 	
 	// Feed through RGB signals
-	assign oR = iR ? 8'hFF : 0;
-	assign oG = iG ? 8'hFF : 0;
-	assign oB = iB ? 8'hFF : 0;
+	assign oR = iR ? 8'hFF : 8'h00;
+	assign oG = iG ? 8'hFF : 8'h00;
+	assign oB = iB ? 8'hFF : 8'h00;
 	
 	// Create counters here for hscan and vscan
 	reg [9:0] hcount_raw;
@@ -51,8 +51,8 @@ module vga(
 	assign vsync = ~((vcount_raw >= (res_vert + front_porch_vert)) & (vcount_raw < (res_vert + front_porch_vert + sync_vert)));
 
 	// Keep x and y wihtin active pixels
-	assign hcount = (hcount_raw < total_blanking_horz) ? 0 : (hcount_raw - total_blanking_horz);
-	assign vcount = (vcount_raw >= res_vert) ? (res_vert - 1) : vcount_raw;
+	assign hcount = (hcount_raw < total_blanking_horz) ? 10'h00 : (hcount_raw - total_blanking_horz);
+	assign vcount = (vcount_raw >= res_vert) ? (res_vert - 10'h01) : vcount_raw;
 
 	// Blanking Signal
 	assign blank = ~((hcount_raw < total_blanking_horz) | (vcount_raw > res_vert-1));

@@ -23,7 +23,7 @@ begin
           //if paddle is for player one, output on left side of screen
           if(player == 1'b0) begin
               //write pixels high if the vga count is within the position of the paddle
-              if((hcount < 7) && (hcount >2) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48))) begin
+              if((hcount < 22) && (hcount >12) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48))) begin
               r <= 1'b1;
               g <= 1'b1;
               b <= 1'b1;
@@ -40,7 +40,7 @@ begin
           // if the paddle is for player two, output on the right side of the screen
           else begin
               //write pixels high if the vga count is within the position of the paddle
-              if((hcount < 638)  && (hcount > 633) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48))) begin
+              if((hcount < 627)  && (hcount > 617) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48))) begin
               r <= 1'b1;
               g <= 1'b1;
               b <= 1'b1;
@@ -58,38 +58,37 @@ begin
 end
 
 
-always @(negedge vsync)
+always @(negedge vsync or posedge rst)
 begin
 
 	 //reset paddle position
-	 if(rst ==1'b1) begin
-	 paddleStartPos <= 9'd216;
+	 if(rst) begin
+		paddleStartPos <= 9'd216;
 	 end
-
 	 else begin
 
 			//button is active low
 
 			 if(up== 1'b0) begin
-				  if(paddleStartPos <= 3) begin
-						paddleStartPos <=3;
+				  if(paddleStartPos <= 10) begin
+						paddleStartPos <=10;
 
 				  end
 
 				  else begin
-						paddleStartPos <= paddleStartPos -1;
+						paddleStartPos <= paddleStartPos - 9'h05;
 				  end
 
 			 end
 
 			 else if (down ==1'b0) begin
-				  if(paddleStartPos >= 429) begin
-						paddleStartPos <=429;
+				  if(paddleStartPos >= 421) begin
+						paddleStartPos <=421;
 
 				  end
 
 				  else begin
-						paddleStartPos <= paddleStartPos +1;
+						paddleStartPos <= paddleStartPos + 9'h05;
 				  end
 
 			 end
