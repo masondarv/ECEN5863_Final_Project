@@ -25,7 +25,6 @@ module pong_new(
 	assign comb_B = frame_B || pad0_B || pad1_B || ball_B;
 
 	wire collision;
-	assign GPIO_0[0] = collision;
 	
 	vga_pll pixel_clk (
 		.refclk (CLOCK_50),		//  refclk.clk
@@ -107,10 +106,14 @@ module pong_new(
 		.vcount (vcount),
 		.vsync (VGA_VS),
 		.collision (collision),
+		.temp (temp),	// TEMPORARY FOR TESTING
 		.r (ball_R),
 		.g (ball_G),
 		.b (ball_B)
 	);
+	
+	wire temp;						// TEMPORARY FOR TESTING
+	assign GPIO_0[0] = temp;	// TEMPORARY FOR TESTING
 	
 	wire ball_sig, ball_R, ball_G, ball_B;
 	assign ball_sig = ball_R || ball_G || ball_B;
@@ -125,7 +128,5 @@ module pong_new(
 		.vsync (VGA_VS),
 		.collision (collision)
 	);
-	
-	assign GPIO_0[1] = frame_R;
-	
+		
 endmodule
