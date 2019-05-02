@@ -7,7 +7,7 @@ module ball(
 	input [9:0] hcount, vcount,
 	input vsync,
 	input collision,
-	output reg temp,	// TEMPORARY FOR TESTING
+	output[9:0] reg temp,	// TEMPORARY FOR TESTING
 	output reg r, g, b
   );
 
@@ -37,7 +37,7 @@ module ball(
 			ball_y = 40;		// 480/2
 			ball_vect_x = 2;	// Start with a 45 degree vector
 			ball_vect_y = 2;
-      temp=0;
+      temp = 10'd0;
 		end
 		else begin
 			// we're at a frame sync
@@ -45,31 +45,37 @@ module ball(
 
 			// we're colliding, update the vector and do not change ball position
 			if(collision) begin
-        temp =1;
+        temp[0] =1'b1;
 				// if ball is colliding with top or bottom of frame, flip the y vector
 				if(ball_y < 15) begin
+          temp[1] =1'b1
 					ball_vect_y = +2;
 				end
 				else if(ball_y > 463) begin
+          temp[2] =1'b1;
 					ball_vect_y = -2;
 				end
 
 					// we're hitting a paddle, flip the x vector
 				else if((ball_x < 37 ) && (ball_x >20 )) begin
+          temp[3] =1'b1;
 					ball_vect_x = 2;
 				end
 				else if((ball_x > 602) && (ball_x<619)) begin
+          temp[4] =1'b1;
 					ball_vect_x = -2;
 				end
 
 					// player 2 scores, stop the ball, add a point for player 2
 				else if(ball_x <= 20) begin
+          temp[5] =1'b1;
 					ball_vect_x = 0;
 					ball_vect_y = 0;
 				end
 
 				//player 1 scores, stop the ball, add a point for player 1
 				else if(ball_x >= 619) begin
+          temp[6] =1'b1;
 					ball_vect_x = 0;
 					ball_vect_y = 0;
 				end
@@ -81,6 +87,7 @@ module ball(
 
 			// we're not colliding, leave the vector unchanged and update ball location
 			else begin
+        temp[7] =1'b1;
 				ball_x = ball_x + ball_vect_x;
 				ball_y = ball_y + ball_vect_y;
 				//temp = 0;// TEMPORARY FOR TESTING
