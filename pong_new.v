@@ -21,17 +21,19 @@ module pong_new(
 	assign hard_reset = SW[9];
 	assign reset = SW[8];
 	
-	assign comb_R = frame_R || pad0_R || pad1_R || ball_R;
-	assign comb_G = frame_G || pad0_G || pad1_G || ball_G;
-	assign comb_B = frame_B || pad0_B || pad1_B || ball_B;
+	assign comb_R = frame_R || pad0_R || pad1_R || ball_R || p1_score_R || p2_score_R;
+	assign comb_G = frame_G || pad0_G || pad1_G || ball_G || p1_score_G || p2_score_G;
+	assign comb_B = frame_B || pad0_B || pad1_B || ball_B || p1_score_B || p2_score_B;
 
 	wire collision;
-	
+
+
 	vga_pll pixel_clk (
 		.refclk (CLOCK_50),		//  refclk.clk
 		.rst (hard_reset),		//   reset.reset
 		.outclk_0 (clk) );		// outclk0.clk 
-				 
+
+
 	vga vga_inst (
 		.clk (clk),
 		.reset (hard_reset),
@@ -83,6 +85,7 @@ module pong_new(
 	wire pad0_sig, pad0_R, pad0_G, pad0_B;
 	assign pad0_sig = pad0_R || pad0_G || pad0_B;
 	
+
 	paddle p2(
 		.clk (clk),
 		.rst (reset),
@@ -100,6 +103,7 @@ module pong_new(
 	wire pad1_sig, pad1_R, pad1_G, pad1_B;
 	assign pad1_sig = pad1_R || pad1_G || pad1_B;
 	
+
 	ball ball_inst(
 		.clk (clk),
 		.reset (reset),
@@ -119,6 +123,36 @@ module pong_new(
 	wire ball_sig, ball_R, ball_G, ball_B;
 	assign ball_sig = ball_R || ball_G || ball_B;
 
+
+	score #(30, 10, 220, 20) p1_score(
+		.clk (clk),
+		.reset (reset),
+		.hcount (hcount),
+		.vcount (vcount),
+		.score_pulse (0), // need to wire to ball for scores
+		// .game_over (), // should be wired to something to reset the game
+		.r (p1_score_R),
+		.g (p1_score_G),
+		.b (p1_score_B)
+	);
+
+	wire p1_score_R, p1_score_G, p1_score_B;
+	
+	score #(30, 10, 390, 20) p2_score(
+		.clk (clk),
+		.reset (reset),
+		.hcount (hcount),
+		.vcount (vcount),
+		.score_pulse (0), // need to wire to ball for scores
+		// .game_over (), // should be wired to something to reset the game
+		.r (p2_score_R),
+		.g (p2_score_G),
+		.b (p2_score_B)
+	);
+
+	wire p2_score_R, p2_score_G, p2_score_B;
+
+
 	collision coll_inst(
 		.clk (clk),
 		.rst (reset),
@@ -129,5 +163,6 @@ module pong_new(
 		.vsync (VGA_VS),
 		.collision (collision)
 	);
-		
+
+	
 endmodule
