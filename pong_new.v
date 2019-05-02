@@ -19,11 +19,11 @@ module pong_new(
 	wire comb_R, comb_G, comb_B;
 	 
 	assign hard_reset = SW[9];
-	assign reset = SW[8];
+	assign reset = SW[8] || game_over_p2 || game_over_p1;
 	
-	assign comb_R = frame_R || pad0_R || pad1_R || ball_R || p1_score_R || p2_score_R;
-	assign comb_G = frame_G || pad0_G || pad1_G || ball_G || p1_score_G || p2_score_G;
-	assign comb_B = frame_B || pad0_B || pad1_B || ball_B || p1_score_B || p2_score_B;
+	assign comb_R = frame_R || centerline_R || pad0_R || pad1_R || ball_R || p1_score_R || p2_score_R;
+	assign comb_G = frame_G || centerline_G || pad0_G || pad1_G || ball_G || p1_score_G || p2_score_G;
+	assign comb_B = frame_B || centerline_B || pad0_B || pad1_B || ball_B || p1_score_B || p2_score_B;
 
 	wire collision;
 
@@ -55,8 +55,6 @@ module pong_new(
 
 	
 	frame frame_inst(
-		.clk (clk),
-		.reset (reset),
 		.hcount (hcount),
 		.vcount (vcount),
 		.r (frame_R),
@@ -67,6 +65,17 @@ module pong_new(
 	wire frame_sig, frame_R, frame_G, frame_B;
 	assign frame_sig = frame_R || frame_G || frame_B;
 
+	
+	centerline(
+		.hcount (hcount),
+		.vcount (vcount),
+		.r (centerline_R),
+		.g (centerline_G),
+		.b (centerline_B)
+	);
+	
+	wire centerline_R, centerline_G, centerline_B;
+	
 	
 	paddle #(0) p1(
 		.clk (clk),
@@ -101,6 +110,8 @@ module pong_new(
 	wire pad1_sig, pad1_R, pad1_G, pad1_B;
 	assign pad1_sig = pad1_R || pad1_G || pad1_B;
 	
+	wire p1_score_pulse, p2_score_pulse;
+	
 
 	ball ball_inst(
 		.clk (clk),
@@ -109,14 +120,13 @@ module pong_new(
 		.vcount (vcount),
 		.vsync (VGA_VS),
 		.collision (collision),
-		.temp (temp),	// TEMPORARY FOR TESTING
+		.temp (LEDR),	// TEMPORARY FOR TESTING
 		.r (ball_R),
 		.g (ball_G),
-		.b (ball_B)
+		.b (ball_B),
+		.p1score(p1_score_pulse),
+		.p2score(p2_score_pulse)
 	);
-	
-	wire temp;						// TEMPORARY FOR TESTING
-	assign GPIO_0[0] = temp;	// TEMPORARY FOR TESTING
 	
 	wire ball_sig, ball_R, ball_G, ball_B;
 	assign ball_sig = ball_R || ball_G || ball_B;
@@ -127,8 +137,8 @@ module pong_new(
 		.reset (reset),
 		.hcount (hcount),
 		.vcount (vcount),
-		.score_pulse (0), // need to wire to ball for scores
-		// .game_over (), // should be wired to something to reset the game
+		.score_pulse (p1_score_pulse), // need to wire to ball for scores
+		 .game_over (game_over_p1), // should be wired to something to reset the game
 		.r (p1_score_R),
 		.g (p1_score_G),
 		.b (p1_score_B)
@@ -136,13 +146,15 @@ module pong_new(
 
 	wire p1_score_R, p1_score_G, p1_score_B;
 	
+	wire game_over_p2, game_over_p1;
+	
 	score #(30, 10, 390, 20) p2_score(
 		.clk (clk),
 		.reset (reset),
 		.hcount (hcount),
 		.vcount (vcount),
-		.score_pulse (0), // need to wire to ball for scores
-		// .game_over (), // should be wired to something to reset the game
+		.score_pulse (p2_score_pulse), // need to wire to ball for scores
+		 .game_over (game_over_p2), // should be wired to something to reset the game
 		.r (p2_score_R),
 		.g (p2_score_G),
 		.b (p2_score_B)

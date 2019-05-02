@@ -20,37 +20,40 @@ module score(
 	
 	// Wires to connect all the segments
 	wire [6:0] seg_outputs;
+	
+	
+	always @(posedge score_pulse or posedge reset) begin
+		if(reset)  begin
+			score <= 0;
+			game_over <=0;
+		end
+		// Add to score if a score pulse is high
+		else if(score_pulse) begin
+			score <= score + 4'h1;
+			
+			// Score maxed out, reset the game
+			if(score == 9) begin
+				game_over <= 4'h1;
+			end
+		end
+	end
 
 	always @(posedge clk) begin
-		if(reset)  begin
-			score = 0;
-		end
-		else begin
-			// Add to score if a score pulse is high
-			if(score_pulse) begin
-				score <= score + 4'h1;
-				
-				// Score maxed out, reset the game
-				if(score == 10) begin
-					game_over <= 1;
-				end
-			end
 
-			// Decode Score
-			case (score)
-				0 : score_segs <= 7'b0111111;
-				1 : score_segs <= 7'b0000110;
-				2 : score_segs <= 7'b1011011;
-				3 : score_segs <= 7'b1001111;
-				4 : score_segs <= 7'b1100110;
-				5 : score_segs <= 7'b1101101;
-				6 : score_segs <= 7'b1111101;
-				7 : score_segs <= 7'b0000111;
-				8 : score_segs <= 7'b1111111;
-				9 : score_segs <= 7'b1100111;
-				default: score_segs <= 7'b0111111;
-			endcase
-		end
+		// Decode Score
+		case (score)
+			0 : score_segs <= 7'b0111111;
+			1 : score_segs <= 7'b0000110;
+			2 : score_segs <= 7'b1011011;
+			3 : score_segs <= 7'b1001111;
+			4 : score_segs <= 7'b1100110;
+			5 : score_segs <= 7'b1101101;
+			6 : score_segs <= 7'b1111101;
+			7 : score_segs <= 7'b0000111;
+			8 : score_segs <= 7'b1111111;
+			9 : score_segs <= 7'b1100111;
+			default: score_segs <= 7'b0111111;
+		endcase
 	end
 	
 	// Seg 0
