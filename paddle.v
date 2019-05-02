@@ -5,6 +5,7 @@
 module paddle(
 input clk, rst, vsync, up, down,
 input [9:0] hcount, vcount,
+output [8:0] paddle_pos,
 output r, g, b
 );
 
@@ -26,16 +27,16 @@ begin
 	 else begin
 		//button is active low
 		if(!up) begin
-			if(paddleStartPos <= 10) begin
-				paddleStartPos <= 10;
+			if(paddleStartPos <= 16) begin
+				paddleStartPos <= 16;
 			end
 			else begin
 				paddleStartPos <= paddleStartPos - 9'h05;
 			end
 		end
 		else if (!down) begin
-			if(paddleStartPos >= 421) begin
-				paddleStartPos <= 421;
+			if(paddleStartPos >= 415) begin
+				paddleStartPos <= 415;
 			end
 			else begin
 				paddleStartPos <= paddleStartPos + 9'h05;
@@ -47,11 +48,14 @@ end
 
 // Paddle Output
 assign paddle_out = !player ?
-					((hcount < 22) && (hcount >12) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48))) : 
-					((hcount < 627)  && (hcount > 617) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48)));
+					((hcount < 24) && (hcount >14) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48))) : 
+					((hcount < 625)  && (hcount > 615) && (vcount >= paddleStartPos) && (vcount <= (paddleStartPos+48)));
 
 assign r = paddle_out;
 assign g = paddle_out;
 assign b = paddle_out;
+
+// Output Paddle Position
+assign paddle_pos = paddleStartPos;
 
 endmodule

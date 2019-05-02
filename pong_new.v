@@ -87,9 +87,11 @@ module pong_new(
 		.vcount (vcount),
 		.r (pad0_R),
 		.g (pad0_G),
-		.b (pad0_B)
+		.b (pad0_B),
+		.paddle_pos (p1_pad_pos)
 	);
 
+	wire [8:0] p1_pad_pos;
 	wire pad0_sig, pad0_R, pad0_G, pad0_B;
 	assign pad0_sig = pad0_R || pad0_G || pad0_B;
 	
@@ -104,9 +106,11 @@ module pong_new(
 		.vcount (vcount),
 		.r (pad1_R),
 		.g (pad1_G),
-		.b (pad1_B)
+		.b (pad1_B),
+		.paddle_pos (p2_pad_pos)
 	);
 
+	wire [8:0] p2_pad_pos;
 	wire pad1_sig, pad1_R, pad1_G, pad1_B;
 	assign pad1_sig = pad1_R || pad1_G || pad1_B;
 	
@@ -120,7 +124,9 @@ module pong_new(
 		.vcount (vcount),
 		.vsync (VGA_VS),
 		.collision (collision),
-		.temp (LEDR),	// TEMPORARY FOR TESTING
+		.p1_pad_pos (p1_pad_pos),
+		.p2_pad_pos (p2_pad_pos),
+		.debug_out (LEDR),
 		.r (ball_R),
 		.g (ball_G),
 		.b (ball_B),
