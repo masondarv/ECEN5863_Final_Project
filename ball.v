@@ -8,7 +8,8 @@ module ball(
 	input vsync,
 	input collision,
 	output reg temp,	// TEMPORARY FOR TESTING
-	output reg r, g, b );
+	output reg r, g, b
+  );
 
 	reg [9:0] ball_x, ball_y;
 	reg signed [3:0] ball_vect_x, ball_vect_y;	// Stores the motion vector for the ball (current location is incremented by this at every frame transition
@@ -21,7 +22,7 @@ module ball(
 			g <= 1;
 			b <= 1;
 		end
-		else begin 
+		else begin
 			// We're not at the ball, output zero
 			r <= 0;
 			g <= 0;
@@ -36,6 +37,7 @@ module ball(
 			ball_y = 40;		// 480/2
 			ball_vect_x = 2;	// Start with a 45 degree vector
 			ball_vect_y = 2;
+      temp=0;
 		end
 		else begin
 			// we're at a frame sync
@@ -43,7 +45,7 @@ module ball(
 
 			// we're colliding, update the vector and do not change ball position
 			if(collision) begin
-				
+        temp =1;
 				// if ball is colliding with top or bottom of frame, flip the y vector
 				if(ball_y < 15) begin
 					ball_vect_y = +2;
@@ -71,9 +73,9 @@ module ball(
 					ball_vect_x = 0;
 					ball_vect_y = 0;
 				end
-				
-				ball_x = ball_x + ball_vect_x;
-				ball_y = ball_y + ball_vect_y;
+
+				//ball_x = ball_x + ball_vect_x;
+				//ball_y = ball_y + ball_vect_y;
 
 			end
 
@@ -81,7 +83,7 @@ module ball(
 			else begin
 				ball_x = ball_x + ball_vect_x;
 				ball_y = ball_y + ball_vect_y;
-				temp = 0;// TEMPORARY FOR TESTING
+				//temp = 0;// TEMPORARY FOR TESTING
 			end
 		end
 
