@@ -68,13 +68,12 @@ module pong_new(
 	assign frame_sig = frame_R || frame_G || frame_B;
 
 	
-	paddle p1(
+	paddle #(0) p1(
 		.clk (clk),
 		.rst (reset),
 		.vsync (VGA_VS),
 		.up (KEY[3]),
 		.down (KEY[2]),
-		.player (0),
 		.hcount (hcount),
 		.vcount (vcount),
 		.r (pad0_R),
@@ -86,13 +85,12 @@ module pong_new(
 	assign pad0_sig = pad0_R || pad0_G || pad0_B;
 	
 
-	paddle p2(
+	paddle #(1) p2(
 		.clk (clk),
 		.rst (reset),
 		.vsync (VGA_VS),
 		.up (KEY[1]),
 		.down (KEY[0]),
-		.player (1),
 		.hcount (hcount),
 		.vcount (vcount),
 		.r (pad1_R),
